@@ -1,0 +1,47 @@
+/* Modern profile and modal styles */
+:root{
+  --accent-1: #3b82f6;
+  --accent-2: #60a5fa;
+  --bg-card: rgba(255,255,255,0.9);
+  --muted: #6b7280;
+  --glass: rgba(255,255,255,0.6);
+}
+
+.inpage-profile{
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+  padding:6px 10px;
+  border-radius:10px;
+  transition:transform .14s ease, box-shadow .14s ease, background .14s ease;
+  display:flex;align-items:center;gap:10px;cursor:pointer;border:none;
+}
+.inpage-profile:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(2,6,23,0.12);background:linear-gradient(90deg, rgba(59,130,246,0.06), rgba(96,165,250,0.03));}
+.inpage-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:14px;box-shadow:0 6px 18px rgba(59,130,246,0.18);overflow:hidden}
+.inpage-avatar img.inpage-avatar-img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+.inpage-info{display:flex;flex-direction:column;gap:2px}
+.inpage-name{font-size:13px;font-weight:700;color:#0f172a}
+.inpage-role{font-size:11px;color:var(--muted)}
+
+/* Modal overlay: subtle blur and dim */
+.profile-modal-overlay{
+  position:fixed;inset:0;z-index:1200;display:flex;align-items:flex-start;justify-content:flex-end;padding:40px;pointer-events:auto;
+  background: linear-gradient(180deg, rgba(2,6,23,0.18), rgba(2,6,23,0.12));
+}
+.profile-modal{
+  width:300px;background:var(--bg-card);backdrop-filter:blur(8px) saturate(120%);border-radius:14px;padding:18px;box-shadow:0 12px 40px rgba(2,6,23,0.32);border:1px solid rgba(15,23,42,0.06);
+}
+.profile-modal .modal-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.profile-modal .modal-avatar{width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,var(--accent-1),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;box-shadow:0 8px 28px rgba(59,130,246,0.16)}
+.profile-modal .modal-avatar img.modal-avatar-img{width:100%;height:100%;object-fit:cover;border-radius:12px;display:block}
+.profile-modal .modal-name{font-weight:800;color:#0f172a;font-size:16px}
+.profile-modal .modal-role{font-size:12px;color:var(--muted)}
+
+.profile-modal .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+.modal-btn{padding:8px 12px;border-radius:10px;border:none;background:#f3f4f6;color:#0f172a;cursor:pointer;font-weight:600;transition:transform .12s ease,box-shadow .12s ease}
+.modal-btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(2,6,23,0.08)}
+.modal-btn.logout{background:#ef4444;color:white}
+
+/* Responsive tweak */
+@media(max-width:900px){
+  .profile-modal{right:16px;left:16px;width:auto}
+  .profile-modal-overlay{padding:18px}
+}

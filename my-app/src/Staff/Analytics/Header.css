@@ -1,0 +1,76 @@
+.topbar { 
+  background: #fff; 
+  color: #1b2430; 
+  padding: 20px 28px; 
+  border-bottom: 1px solid rgba(16, 24, 40, 0.04);
+  margin-left: 243px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 18px;
+}
+
+.header-content { 
+  margin: 0;
+}
+
+.topbar-title { 
+  margin: 0 0 4px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  
+}
+
+.topbar p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.header-controls select {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  background: #fff;
+  font-size: 13px;
+  color: #1f2937;
+}
+
+.btn-refresh {
+  background: var(--admin-color-primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-refresh:hover {
+  background: var(--admin-color-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+@media (max-width: 900px) {
+  .topbar { margin-left: 0 }
+}

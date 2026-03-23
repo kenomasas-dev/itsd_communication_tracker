@@ -1,0 +1,291 @@
+/* ── Page shell ─────────────────────────────────────── */
+.messages-page { display: flex; min-height: 100vh; }
+.user-main { flex: 1; padding: 28px 24px; background: #f3f4f8; display: flex; flex-direction: column; gap: 20px; }
+
+/* ── Announcement page header ──────────────────────── */
+.ann-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.ann-header-left { display: flex; align-items: center; gap: 14px; }
+.ann-header-left h1 { margin: 0; font-size: 22px; font-weight: 700; color: #111827; }
+.ann-header-left p { margin: 4px 0 0; font-size: 13px; color: #6b7280; }
+
+/* ── Stats bar ─────────────────────────────────────── */
+.ann-stats-bar {
+  display: flex;
+  gap: 12px;
+}
+.ann-stat {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 80px;
+}
+.ann-stat-num { font-size: 22px; font-weight: 700; color: #111827; line-height: 1; }
+.ann-stat-lbl { font-size: 11px; color: #9ca3af; font-weight: 500; letter-spacing: 0.4px; text-transform: uppercase; }
+
+/* ── Feed ──────────────────────────────────────────── */
+.ann-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Card ──────────────────────────────────────────── */
+.ann-card {
+  display: flex;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.15s;
+  position: relative;
+}
+.ann-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+  transform: translateY(-1px);
+}
+.ann-card-unread {
+  border-left: none;
+  background: #fafbff;
+}
+.ann-card-unread::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1.5px var(--accent);
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* ── Left accent bar ───────────────────────────────── */
+.ann-card-accent {
+  width: 5px;
+  flex-shrink: 0;
+  background: var(--accent, #6366f1);
+  border-radius: 0;
+}
+
+/* ── Card right (read icon + chevron) ──────────────── */
+.ann-card-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.ann-read-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+.ann-read-icon.read {
+  background: #d1fae5;
+  color: #059669;
+}
+.ann-read-icon.unread {
+  background: #ede9fe;
+  color: #6366f1;
+}
+
+/* ── Chevron toggle ─────────────────────────────────── */
+.ann-chevron {
+  font-size: 18px;
+  color: #9ca3af;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: transform 0.25s ease, color 0.2s;
+  line-height: 1;
+  align-self: center;
+}
+.ann-chevron-open {
+  transform: rotate(-180deg);
+  color: var(--accent, #6366f1);
+}
+
+/* ── Collapsible text area ──────────────────────────── */
+.ann-card-text-wrap {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.35s ease, opacity 0.25s ease;
+}
+.ann-card-text-wrap.expanded {
+  max-height: 1000px;
+  opacity: 1;
+}
+
+/* ── Read more hint ─────────────────────────────────── */
+.ann-read-more {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent, #6366f1);
+  opacity: 0.85;
+}
+.ann-card:hover .ann-read-more { opacity: 1; }
+
+/* ── Expanded card style ────────────────────────────── */
+.ann-card-expanded {
+  box-shadow: 0 6px 28px rgba(0,0,0,0.10);
+}
+
+/* ── Card top: ensure chevron aligns ───────────────── */
+.ann-card-body {
+  flex: 1;
+  padding: 18px 20px;
+  min-width: 0;
+}
+
+/* ── Full message text (inside collapsible) ─────────── */
+.ann-card-text {
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid #f3f4f6;
+  font-size: 14px;
+  color: #111827;
+  line-height: 1.65;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.ann-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* ── Avatar ────────────────────────────────────────── */
+.ann-avatar {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Card meta ─────────────────────────────────────── */
+.ann-card-meta { flex: 1; min-width: 0; }
+.ann-card-subject {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.ann-new-badge {
+  background: #6366f1;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  animation: ann-pulse 2s infinite;
+}
+@keyframes ann-pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+.ann-card-from {
+  font-size: 12px;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ann-from-label { color: #6b7280; font-weight: 600; }
+.ann-dot { color: #d1d5db; }
+.ann-card-date { color: #9ca3af; }
+
+/* ── Empty / loading ───────────────────────────────── */
+.ann-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; color: #9ca3af; padding: 80px 20px;
+  background: #fff; border-radius: 14px; border: 1px dashed #e5e7eb;
+}
+.ann-empty-icon { font-size: 48px; }
+.ann-empty p { font-size: 16px; font-weight: 600; color: #374151; margin: 0; }
+.ann-empty span { font-size: 13px; }
+
+.ann-loading {
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; padding: 80px;
+}
+.ann-loading-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #6366f1; opacity: 0.5;
+  animation: ann-bounce 1s infinite ease-in-out;
+}
+.ann-loading-dot:nth-child(2) { animation-delay: 0.15s; }
+.ann-loading-dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes ann-bounce { 0%,80%,100%{transform:scale(0.7);opacity:0.4} 40%{transform:scale(1);opacity:1} }
+
+/* ── Shared ────────────────────────────────────────── */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #4f46e5;
+  color: #fff;
+  border: 1.5px solid #4f46e5;
+  padding: 9px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  transition: background 0.18s, box-shadow 0.18s, transform 0.12s;
+  box-shadow: 0 2px 8px rgba(79,70,229,0.25);
+}
+.btn-secondary:hover {
+  background: #4338ca;
+  border-color: #4338ca;
+  box-shadow: 0 4px 14px rgba(79,70,229,0.35);
+  transform: translateY(-1px);
+}
+.btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.btn-refresh-icon {
+  display: inline-block;
+  font-size: 16px;
+  transition: transform 0.4s ease;
+}
+.btn-refresh:hover .btn-refresh-icon {
+  transform: rotate(180deg);
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 600px) {
+  .ann-stats-bar { gap: 8px; }
+  .ann-stat { padding: 10px 14px; min-width: 64px; }
+  .ann-card-body { padding: 14px 14px; }
+}
