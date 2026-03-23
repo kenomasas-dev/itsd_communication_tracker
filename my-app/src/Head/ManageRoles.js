@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import './HeadPage.css';
-import { LayoutDashboard, TrendingUp, Activity, Users, MessageCircle, Settings, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, TrendingUp, Activity, Users, MessageCircle, Settings, ShieldCheck, X } from 'lucide-react';
 
 export default function ManageRoles() {
   const navigate = useNavigate();
@@ -11,7 +11,8 @@ export default function ManageRoles() {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [feedback, setFeedback] = useState({ msg: '', type: '' });
-  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'User', department: '', phone: '', notes: '' });
+  const [showModal, setShowModal] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'Admin', department: '', phone: '', notes: '' });
 
   const iconProps = { size: 16, strokeWidth: 2, style: { display: 'block' } };
   const navItems = [
@@ -105,7 +106,8 @@ export default function ManageRoles() {
       }
 
       setFeedback({ msg: 'User created successfully.', type: 'success' });
-      setForm({ name: '', email: '', password: '', role: 'User', department: '', phone: '', notes: '' });
+      setForm({ name: '', email: '', password: '', role: 'Admin', department: '', phone: '', notes: '' });
+      setShowModal(false);
 
       // success toast style auto fade
       setTimeout(() => setFeedback({ msg: '', type: '' }), 3200);
@@ -126,7 +128,7 @@ export default function ManageRoles() {
         <Header title="Manage Roles" subtitle="Create and assign User/Admin accounts" userName="Head User" userEmail="admin@example.com" />
         <div style={{ padding: '20px' }}>
           <div style={{ marginBottom: '16px', display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <h2 style={{ margin: 0 }}>Create New User/Admin</h2>
+            <h2 style={{ margin: 0 }}>Admin Accounts</h2>
             {feedback.msg && (
               <span style={{ color: feedback.type === 'error' ? '#dc2626' : '#16a34a' }}>{feedback.msg}</span>
             )}
@@ -138,21 +140,22 @@ export default function ManageRoles() {
             </div>
           ) : (
             <>
-              <form onSubmit={submitForm} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px', marginBottom: '24px' }}>
-                <input name="name" value={form.name} onChange={handleChange} placeholder="Full Name" required style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-                <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Email" required style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-                <input name="password" type="password" value={form.password} onChange={handleChange} placeholder="Password (optional)" style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-                <select name="role" value={form.role} onChange={handleChange} style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }}>
-                
-                  <option value="Admin">Admin</option>
-                 
-                </select>
-                <input name="department" value={form.department} onChange={handleChange} placeholder="Department" style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-                <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone" style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-                <input name="notes" value={form.notes} onChange={handleChange} placeholder="Notes" style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '6px' }} />
-                <div></div>
-                <button type="submit" style={{ padding: '10px 14px', border: 'none', borderRadius: '6px', backgroundColor: '#2563eb', color: 'white', cursor: 'pointer', fontWeight: 600 }}>Create User</button>
-              </form>
+              <button 
+                onClick={() => setShowModal(true)}
+                style={{ 
+                  marginBottom: '20px',
+                  padding: '10px 16px', 
+                  border: 'none', 
+                  borderRadius: '6px', 
+                  backgroundColor: '#2563eb', 
+                  color: 'white', 
+                  cursor: 'pointer', 
+                  fontWeight: 600,
+                  fontSize: '14px'
+                }}
+              >
+                + Create New Admin
+              </button>
 
               <section style={{ border: '1px solid #e5e7eb', borderRadius: '10px', background: 'white', overflow: 'hidden' }}>
                 <div style={{ padding: '12px 16px', borderBottom: '1px solid #e5e7eb', fontWeight: 700 }}>Existing Accounts</div>
@@ -185,6 +188,147 @@ export default function ManageRoles() {
               )}
             </div>
           </section>
+
+              {/* Modal Overlay */}
+              {showModal && (
+                <div style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 1000
+                }}>
+                  <div style={{
+                    backgroundColor: 'white',
+                    borderRadius: '10px',
+                    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.2)',
+                    maxWidth: '500px',
+                    width: '90%',
+                    maxHeight: '90vh',
+                    overflowY: 'auto',
+                    padding: '24px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                      <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 700 }}>Create New Admin</h3>
+                      <button 
+                        onClick={() => {
+                          setShowModal(false);
+                          setFeedback({ msg: '', type: '' });
+                        }}
+                        style={{ 
+                          background: 'none', 
+                          border: 'none', 
+                          cursor: 'pointer',
+                          color: '#64748b'
+                        }}
+                      >
+                        <X size={20} />
+                      </button>
+                    </div>
+
+                    <form onSubmit={submitForm} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
+                      <input 
+                        name="name" 
+                        value={form.name} 
+                        onChange={handleChange} 
+                        placeholder="Full Name" 
+                        required 
+                        style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} 
+                      />
+                      <input 
+                        name="email" 
+                        type="email" 
+                        value={form.email} 
+                        onChange={handleChange} 
+                        placeholder="Email" 
+                        required 
+                        style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} 
+                      />
+                      <input 
+                        name="password" 
+                        type="password" 
+                        value={form.password} 
+                        onChange={handleChange} 
+                        placeholder="Password (optional)" 
+                        style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} 
+                      />
+                      <select 
+                        name="role" 
+                        value={form.role} 
+                        onChange={handleChange} 
+                        style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}
+                      >
+                        <option value="Admin">Admin</option>
+                      </select>
+                      <input 
+                        name="department" 
+                        value={form.department} 
+                        onChange={handleChange} 
+                        placeholder="Department" 
+                        style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} 
+                      />
+                      <input 
+                        name="phone" 
+                        value={form.phone} 
+                        onChange={handleChange} 
+                        placeholder="Phone" 
+                        style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} 
+                      />
+                      <input 
+                        name="notes" 
+                        value={form.notes} 
+                        onChange={handleChange} 
+                        placeholder="Notes" 
+                        style={{ padding: '10px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} 
+                      />
+                      
+                      <div style={{ display: 'flex', gap: '12px', marginTop: '8px' }}>
+                        <button 
+                          type="submit" 
+                          style={{ 
+                            flex: 1,
+                            padding: '10px 14px', 
+                            border: 'none', 
+                            borderRadius: '6px', 
+                            backgroundColor: '#2563eb', 
+                            color: 'white', 
+                            cursor: 'pointer', 
+                            fontWeight: 600,
+                            fontSize: '14px'
+                          }}
+                        >
+                          Create Admin
+                        </button>
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            setShowModal(false);
+                            setFeedback({ msg: '', type: '' });
+                          }}
+                          style={{ 
+                            flex: 1,
+                            padding: '10px 14px', 
+                            border: '1px solid #d1d5db', 
+                            borderRadius: '6px', 
+                            backgroundColor: 'white', 
+                            color: '#374151', 
+                            cursor: 'pointer', 
+                            fontWeight: 600,
+                            fontSize: '14px'
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
             </>
           )}
         </div>

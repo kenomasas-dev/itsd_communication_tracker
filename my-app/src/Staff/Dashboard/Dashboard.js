@@ -485,84 +485,96 @@ export default function Dashboard() {
               </div>
 
               {/* RIGHT — Inline Attachment Preview Panel */}
-              <div className="combined-panel attachments-panel">
-                <div className="combined-panel-title">📎 Attachments</div>
-                {combinedItem.attachmentFiles && combinedItem.attachmentFiles.length > 0 ? (() => {
-                  const v2AttachmentFiles = (combinedItem.attachmentFiles || []).filter(isV2Attachment);
-                  const attFiles = v2AttachmentFiles;
+              {combinedItem.status && combinedItem.status[1] && combinedItem.status[1].toLowerCase() === 'approved' ? (
+                <div className="combined-panel attachments-panel">
+                  <div className="combined-panel-title">📎 Attachments</div>
+                  <div className="no-attachments">
+                    <div style={{ fontSize: 36, marginBottom: 8 }}>✅</div>
+                    <div style={{ color: '#94a3b8', fontSize: 14 }}>
+                      Attachments not available for approved communications.
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="combined-panel attachments-panel">
+                  <div className="combined-panel-title">📎 Attachments</div>
+                  {combinedItem.attachmentFiles && combinedItem.attachmentFiles.length > 0 ? (() => {
+                    const v2AttachmentFiles = (combinedItem.attachmentFiles || []).filter(isV2Attachment);
+                    const attFiles = v2AttachmentFiles;
 
-                  if (attFiles.length === 0) {
+                    if (attFiles.length === 0) {
+                      return (
+                        <div className="no-attachments">
+                          <div style={{ fontSize: 36, marginBottom: 8 }}>📭</div>
+                          <div style={{ color: '#94a3b8', fontSize: 14 }}>
+                            No version 2 attachments found for this communication.
+                          </div>
+                        </div>
+                      );
+                    }
+
+                    const activeIndex = selectedInlineIdx >= attFiles.length ? 0 : selectedInlineIdx;
+                    const activeNorm = normalizeAttachment(attFiles[activeIndex]);
+                    const activeUrl = getAttachmentUrl(activeNorm.url);
+                    const nameLower = (activeNorm.name || '').toLowerCase();
+                    const urlLower = (activeNorm.url || '').toLowerCase();
+                    const isImage = /\.(png|jpe?g|gif|webp|bmp)$/i.test(nameLower) || /\.(png|jpe?g|gif|webp|bmp)$/i.test(urlLower);
+                    const isViewable = /\.(pdf|docx?|txt|csv|json|xml|html)$/i.test(nameLower) || /\.(pdf|docx?|txt|csv|json|xml|html)$/i.test(urlLower);
                     return (
-                      <div className="no-attachments">
-                        <div style={{ fontSize: 36, marginBottom: 8 }}>📭</div>
-                        <div style={{ color: '#94a3b8', fontSize: 14 }}>
-                          No version 2 attachments found for this communication.
+                      <div className="inline-attachment-viewer">
+                        {/* File tabs — only show if more than 1 attachment */}
+                        {attFiles.length > 1 && (
+                          <div className="inline-att-tabs">
+                            {attFiles.map((att, idx) => {
+                              const n = normalizeAttachment(att);
+                              const tabLabel = n.displayName || n.name;
+                              return (
+                                <button
+                                  key={idx}
+                                  className={`inline-att-tab${activeIndex === idx ? ' active' : ''}`}
+                                  onClick={() => setSelectedInlineIdx(idx)}
+                                  title={n.name}
+                                >
+                                  📄 {tabLabel.length > 16 ? tabLabel.substring(0, 14) + '…' : tabLabel}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {/* File name bar */}
+                        <div className="inline-att-bar">
+                          <span className="inline-att-name">📎 {activeNorm.displayName || activeNorm.name}</span>
+                          <a href={activeUrl} target="_blank" rel="noopener noreferrer" className="inline-att-open">Open ↗</a>
+                        </div>
+
+                        {/* Inline preview */}
+                        <div className="inline-att-preview">
+                          {isImage && (
+                            <img src={activeUrl} alt={activeNorm.name} className="inline-att-img" />
+                          )}
+                          {!isImage && isViewable && (
+                            <iframe src={activeUrl} title={activeNorm.name} className="inline-att-iframe" />
+                          )}
+                          {!isImage && !isViewable && (
+                            <div className="inline-att-unsupported">
+                              <div style={{ fontSize: 40, marginBottom: 12 }}>📄</div>
+                              <div style={{ fontWeight: 600, color: '#334155', marginBottom: 6 }}>{activeNorm.name}</div>
+                              <div style={{ fontSize: 13, color: '#94a3b8', marginBottom: 16 }}>Preview not available for this file type.</div>
+                              <a href={activeUrl} target="_blank" rel="noopener noreferrer" className="btn">Open in new tab</a>
+                            </div>
+                          )}
                         </div>
                       </div>
                     );
-                  }
-
-                  const activeIndex = selectedInlineIdx >= attFiles.length ? 0 : selectedInlineIdx;
-                  const activeNorm = normalizeAttachment(attFiles[activeIndex]);
-                  const activeUrl = getAttachmentUrl(activeNorm.url);
-                  const nameLower = (activeNorm.name || '').toLowerCase();
-                  const urlLower = (activeNorm.url || '').toLowerCase();
-                  const isImage = /\.(png|jpe?g|gif|webp|bmp)$/i.test(nameLower) || /\.(png|jpe?g|gif|webp|bmp)$/i.test(urlLower);
-                  const isViewable = /\.(pdf|docx?|txt|csv|json|xml|html)$/i.test(nameLower) || /\.(pdf|docx?|txt|csv|json|xml|html)$/i.test(urlLower);
-                  return (
-                    <div className="inline-attachment-viewer">
-                      {/* File tabs — only show if more than 1 attachment */}
-                      {attFiles.length > 1 && (
-                        <div className="inline-att-tabs">
-                          {attFiles.map((att, idx) => {
-                            const n = normalizeAttachment(att);
-                            const tabLabel = n.displayName || n.name;
-                            return (
-                              <button
-                                key={idx}
-                                className={`inline-att-tab${activeIndex === idx ? ' active' : ''}`}
-                                onClick={() => setSelectedInlineIdx(idx)}
-                                title={n.name}
-                              >
-                                📄 {tabLabel.length > 16 ? tabLabel.substring(0, 14) + '…' : tabLabel}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      )}
-
-                      {/* File name bar */}
-                      <div className="inline-att-bar">
-                        <span className="inline-att-name">📎 {activeNorm.displayName || activeNorm.name}</span>
-                        <a href={activeUrl} target="_blank" rel="noopener noreferrer" className="inline-att-open">Open ↗</a>
-                      </div>
-
-                      {/* Inline preview */}
-                      <div className="inline-att-preview">
-                        {isImage && (
-                          <img src={activeUrl} alt={activeNorm.name} className="inline-att-img" />
-                        )}
-                        {!isImage && isViewable && (
-                          <iframe src={activeUrl} title={activeNorm.name} className="inline-att-iframe" />
-                        )}
-                        {!isImage && !isViewable && (
-                          <div className="inline-att-unsupported">
-                            <div style={{ fontSize: 40, marginBottom: 12 }}>📄</div>
-                            <div style={{ fontWeight: 600, color: '#334155', marginBottom: 6 }}>{activeNorm.name}</div>
-                            <div style={{ fontSize: 13, color: '#94a3b8', marginBottom: 16 }}>Preview not available for this file type.</div>
-                            <a href={activeUrl} target="_blank" rel="noopener noreferrer" className="btn">Open in new tab</a>
-                          </div>
-                        )}
-                      </div>
+                  })() : (
+                    <div className="no-attachments">
+                      <div style={{ fontSize: 36, marginBottom: 8 }}>📭</div>
+                      <div style={{ color: '#94a3b8', fontSize: 14 }}>No attachments</div>
                     </div>
-                  );
-                })() : (
-                  <div className="no-attachments">
-                    <div style={{ fontSize: 36, marginBottom: 8 }}>📭</div>
-                    <div style={{ color: '#94a3b8', fontSize: 14 }}>No attachments</div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
 
             </div>
           </div>
