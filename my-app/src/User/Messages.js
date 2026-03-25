@@ -9,7 +9,7 @@ import { ReloadIcon } from '@radix-ui/react-icons';
 
 export default function Messages() {
   const navigate = useNavigate();
-  const goOverview = () => navigate('/User');
+  const goOverview = () => navigate('/user');
 
   const [threads, setThreads] = useState([]);
   const [loading, setLoading] = useState(true);

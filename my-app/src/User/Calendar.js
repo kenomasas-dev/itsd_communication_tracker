@@ -60,7 +60,7 @@ export default function Calendar() {
     setSelectedDateData(getSubmissionsForDate(date));
   };
 
-  const goOverview = () => navigate('/User');
+  const goOverview = () => navigate('/user');
   const goBackMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
   const goNextMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
   const goToday = () => setCurrentDate(new Date());

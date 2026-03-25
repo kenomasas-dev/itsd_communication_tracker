@@ -104,8 +104,8 @@ export default function Process() {
     const getFirstOriginalAttachment = (attachmentsData) => {
         const parsed = parseAttachments(attachmentsData);
         if (!parsed || !Array.isArray(parsed) || parsed.length === 0) return [];
-        const firstOriginal = parsed.find(att => !isV2Attachment(att));
-        const selected = firstOriginal || parsed[0];
+        const firstV2 = parsed.find(att => isV2Attachment(att));
+        const selected = firstV2 || parsed[0];
         return selected ? [selected] : [];
     };
 

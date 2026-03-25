@@ -16,7 +16,7 @@ import Lists from './Lists';
 
 export default function Admin() {
   const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState('lists');
+  const [activeSection, setActiveSection] = useState('dashboard');
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('All Roles');

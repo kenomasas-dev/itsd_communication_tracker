@@ -56,7 +56,7 @@ function Login() {
           // record successful login with user's name and role
           const userName = data.user?.name || email;
           await recordAuditLog(userName, 'LOGIN', `User ${userName} (${email}) logged in from browser (host: ${window.location.hostname})`, 'User');
-          navigate('/User');
+          navigate('/user');
         }
       } else {
         // record failed login attempt

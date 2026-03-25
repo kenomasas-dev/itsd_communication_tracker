@@ -152,7 +152,7 @@ export default function UserSidebar({ active = 'overview', onSelect }) {
 
   const handleClick = (id) => {
     if (id === 'overview') {
-      navigate('/User');
+      navigate('/user');
       return;
     }
     if (id === 'settings') {

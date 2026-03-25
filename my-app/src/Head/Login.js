@@ -29,7 +29,7 @@ function Login({ onLoginSuccess }) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    email: username, // Using email as username
+                    username: username,
                     password: password
                 })
             });
@@ -73,11 +73,11 @@ function Login({ onLoginSuccess }) {
                     {error && <div className="error-message">{error}</div>}
 
                     <div className="form-group" style={{ marginTop: '16px' }}>
-                        <label htmlFor="username">Email</label>
+                        <label htmlFor="username">Username</label>
                         <input
-                            type="email"
+                            type="text"
                             id="username"
-                            placeholder="Enter your admin email"
+                            placeholder="Enter your admin username"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             disabled={loading}

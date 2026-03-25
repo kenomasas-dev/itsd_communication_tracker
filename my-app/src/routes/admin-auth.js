@@ -2,15 +2,40 @@ const express = require('express');
 const pool = require('../config/database');
 const router = express.Router();
 
-// Admin login endpoint
+// Admin / Superadmin login endpoint
 router.post('/admin-login', async (req, res) => {
-  const { email, password } = req.body;
+  const { email, username, password } = req.body;
+
+  if (!password || (!email && !username)) {
+    return res.status(400).json({ success: false, message: 'Username/email and password are required' });
+  }
 
   try {
-    // Query from adminlogin table instead of login table
+    // Superadmin login support via itsd_schema.superadmin table
+    if (username) {
+      const superResult = await pool.query(
+        'SELECT * FROM itsd_schema.superadmin WHERE username = $1 AND password = $2',
+        [username, password]
+      );
+
+      if (superResult.rows.length > 0) {
+        const superUser = superResult.rows[0];
+        const user = {
+          id: superUser.id,
+          name: superUser.username,
+          username: superUser.username,
+          role: 'Superadmin',
+          is_active: true
+        };
+        return res.json({ success: true, user, message: 'Superadmin login successful' });
+      }
+      // If superadmin credentials didn’t match, fall back to normal admin/email login
+    }
+
+    // Query from adminlogin table
     const result = await pool.query(
       'SELECT * FROM itsd_schema.adminlogin WHERE email = $1 AND password = $2',
-      [email, password]
+      [email || username, password]
     );
 
     if (result.rows.length > 0) {

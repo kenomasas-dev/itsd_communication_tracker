@@ -329,7 +329,7 @@ export default function Settings() {
     }));
   };
 
-  const goBack = () => navigate('/User');
+  const goBack = () => navigate('/user');
 
   const handleSaveAll = async () => {
     setSaving(true);

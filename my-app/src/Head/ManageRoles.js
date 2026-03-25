@@ -8,8 +8,10 @@ import { LayoutDashboard, TrendingUp, Activity, Users, MessageCircle, Settings, 
 export default function ManageRoles() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSuperadmin, setIsSuperadmin] = useState(false);
   const [feedback, setFeedback] = useState({ msg: '', type: '' });
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'Admin', department: '', phone: '', notes: '' });
@@ -28,30 +30,44 @@ export default function ManageRoles() {
   ];
 
   useEffect(() => {
-    const currentUser = (() => {
+    const stored = (() => {
       try {
-        return JSON.parse(localStorage.getItem('headUser') || 'null');
+        return JSON.parse(localStorage.getItem('headUser') || localStorage.getItem('adminUser') || localStorage.getItem('user') || 'null');
       } catch (e) {
         return null;
       }
     })();
 
-    if (!currentUser || !currentUser.role || currentUser.role.toLowerCase() !== 'admin') {
-      setIsAdmin(false);
-      setFeedback({ msg: 'Only admin can manage roles.', type: 'error' });
+    if (!stored) {
+      setFeedback({ msg: 'Not logged in. Please log in to manage roles.', type: 'error' });
       setLoading(false);
       return;
     }
 
-    setIsAdmin(true);
+    setCurrentUser(stored);
+
+    const role = (stored.role || '').toString().toLowerCase();
+    const adminRole = role === 'admin' || role === 'superadmin';
+
+    setIsAdmin(adminRole);
+    setIsSuperadmin(role === 'superadmin');
+
+    if (!adminRole) {
+      setFeedback({ msg: 'Read-only access: you can view your own profile details.', type: 'warning' });
+    }
 
     const loadUsers = async () => {
       setLoading(true);
       try {
-        const res = await fetch('/api/auth/users?role=Admin');
-        if (!res.ok) throw new Error('Fetch users failed');
-        const json = await res.json();
-        setUsers(Array.isArray(json) ? json : json.data || []);
+        if (adminRole) {
+          const res = await fetch('/api/auth/users');
+          if (!res.ok) throw new Error('Fetch users failed');
+          const json = await res.json();
+          const fetchedUsers = Array.isArray(json) ? json : json.data || [];
+          setUsers(fetchedUsers);
+        } else {
+          setUsers([stored]);
+        }
       } catch (err) {
         console.error(err);
         setFeedback({ msg: 'Failed to load user list', type: 'error' });
@@ -125,12 +141,24 @@ export default function ManageRoles() {
     <div className="head-page">
       <Sidebar navItems={navItems} settingsItems={settingsItems} />
       <main className="head-main">
-        <Header title="Manage Roles" subtitle="Create and assign User/Admin accounts" userName="Head User" userEmail="admin@example.com" />
+        <Header
+          title="Manage Roles"
+          subtitle="Create and assign User/Admin accounts"
+          userName={currentUser?.name || currentUser?.username || 'Head User'}
+          userEmail={currentUser?.email || currentUser?.username || 'admin@example.com'}
+        />
         <div style={{ padding: '20px' }}>
           <div style={{ marginBottom: '16px', display: 'flex', gap: '12px', alignItems: 'center' }}>
-            <h2 style={{ margin: 0 }}>Admin Accounts</h2>
+            <h2 style={{ margin: 0 }}>Accounts</h2>
+            {currentUser && (
+              <div style={{ color: '#475569', fontSize: '14px' }}>
+                Logged in as <strong>{currentUser.name || currentUser.username}</strong> ({currentUser.role || 'Unknown'})
+              </div>
+            )}
             {feedback.msg && (
-              <span style={{ color: feedback.type === 'error' ? '#dc2626' : '#16a34a' }}>{feedback.msg}</span>
+              <span style={{ color: feedback.type === 'error' ? '#dc2626' : feedback.type === 'warning' ? '#c2410c' : '#16a34a' }}>
+                {feedback.msg}
+              </span>
             )}
           </div>
 
@@ -154,7 +182,7 @@ export default function ManageRoles() {
                   fontSize: '14px'
                 }}
               >
-                + Create New Admin
+                + Add New Section Head
               </button>
 
               <section style={{ border: '1px solid #e5e7eb', borderRadius: '10px', background: 'white', overflow: 'hidden' }}>
@@ -177,8 +205,8 @@ export default function ManageRoles() {
                   <tbody>
                     {users.map(user => (
                       <tr key={user.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                        <td style={{ padding: '8px' }}>{user.name}</td>
-                        <td style={{ padding: '8px' }}>{user.email}</td>
+                        <td style={{ padding: '8px' }}>{user.name || user.username}</td>
+                        <td style={{ padding: '8px' }}>{user.email || user.username || '—'}</td>
                         <td style={{ padding: '8px' }}>{user.role}</td>
                         <td style={{ padding: '8px' }}>{user.department || '—'}</td>
                       </tr>

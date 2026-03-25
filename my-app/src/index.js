@@ -76,7 +76,8 @@ root.render(
         <Route path="/head/login" element={<HeadLogin />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/add-user" element={<AddUser />} />
-        <Route path="/User" element={<Lists />} />
+        <Route path="/user" element={<User />} />
+        <Route path="/User" element={<Navigate to="/user" replace />} />
         <Route path="/user/projects" element={<Projects />} />
         <Route path="/user/analytics" element={<Analytics />} />
         <Route path="/user/audit" element={<AuditLogsUser />} />
